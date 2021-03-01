@@ -1,1 +1,1 @@
-Storage for Different Machine Learning Model Classes
+Storage for different Machine Learning Model Classes
