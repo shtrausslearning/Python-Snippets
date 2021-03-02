@@ -1,4 +1,5 @@
 ''' Technical Indicators '''
+# Useful to create new features for financial timeseries
 
 # Various Financial Timeseries Indicators for Timeseries
 
