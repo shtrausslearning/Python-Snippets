@@ -24,3 +24,17 @@ def plot_line(ldf,lst,title='',sec_id=None,size=[350,1000]):
 
     fig.update_layout(height=size[0],width=size[1],template='plotly_white',title=title,
                           margin=dict(l=50,r=80,t=50,b=40));fig.show()
+
+# data sample
+nperiods = 200
+np.random.seed(123)
+df = pd.DataFrame(np.random.randint(-10, 12, size=(nperiods, 4)),columns=list('ABCD'))
+datelist = pd.date_range(datetime.datetime(2020, 1, 1).strftime('%Y-%m-%d'),periods=nperiods).tolist()
+df['dates'] = datelist 
+df = df.set_index(['dates'])
+df.index = pd.to_datetime(df.index)
+df.iloc[0] = 0
+df = df.cumsum().reset_index()
+
+# Example
+plot_line(df,['A','B'],sec_id=[False,True])
