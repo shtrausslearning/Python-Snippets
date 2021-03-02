@@ -11,7 +11,6 @@ from sklearn.manifold import LocallyLinearEmbedding
 from sklearn.manifold import TSNE
 from sklearn.random_projection import GaussianRandomProjection
 from sklearn.random_projection import SparseRandomProjection
-
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -38,7 +37,7 @@ def scatterPlot(xDF, yDF, algoName):
     plt.show()
 
 # DataFrame input Dimensionality Reduction Function
-def dimRed(ldf,feature='signal',n_comp=5,plot_id=False,model_id='pca'):
+def dimRed(ldf,feature='target',n_comp=5,plot_id=False,model_id='pca'):
     
     # Given a dataframe, split feature/target variable
     X = ldf.copy()
@@ -105,6 +104,19 @@ def dimRed(ldf,feature='signal',n_comp=5,plot_id=False,model_id='pca'):
     
     return X_red # return new feature matrix
 
-# Example modification of input DataFrame
-df_tr2_ICA = dimRed(df_tr2,model_id='fastica',n_comp=5)
-    
+''' Example Application '''
+from sklearn import datasets
+
+def sklearn_to_df(sklearn_dataset):
+    df = pd.DataFrame(sklearn_dataset.data, columns=sklearn_dataset.feature_names)
+    df['target'] = pd.Series(sklearn_dataset.target)
+    return df
+
+#df_boston = sklearn_to_df(datasets.load_boston())
+#display(df_boston.head())
+#df_cali = sklearn_to_df(datasets.fetch_california_housing())
+#display(df_cali.head())
+df_diab = sklearn_to_df(datasets.load_diabetes())
+# print(df_diab.isna().sum()) # check missing data in columns
+
+dimRed(ldf=df_diab,feature='target',n_comp=3,plot_id=True)
