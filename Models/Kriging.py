@@ -1,8 +1,11 @@
 from sklearn.base import BaseEstimator,RegressorMixin
-from numpy.linalg import cholesky, det, lstsq, inv
+from numpy.linalg import cholesky, det, lstsq, inv, pinv
 from scipy.optimize import minimize
 from sklearn.preprocessing import PolynomialFeatures
 pi = 4.0*np.arctan(1.0)
+
+# Kriging Model (Polynomial Regression + Full Gaussian Process Regression Model)
+# Commonly used Ensemble Approach for geospatial interpolation. 
 
 class Kriging(BaseEstimator,RegressorMixin):
     
@@ -13,7 +16,7 @@ class Kriging(BaseEstimator,RegressorMixin):
         self.opt = opt
         self.polyorder = polyorder 
         Kriging.kernel = kernel 
-        
+
     ''' local covariance functions '''
     @staticmethod
     def covfn(X0,X1,theta=1.0,sigma=1.0):
@@ -53,8 +56,8 @@ class Kriging(BaseEstimator,RegressorMixin):
         self.ntot,ndim = self.X.shape
         
         # Collocation Matrix
-        poly = PolynomialFeatures(self.polyorder)
-        self.H = poly.fit_transform(self.X)
+        self.poly = PolynomialFeatures(self.polyorder)
+        self.H = self.poly.fit_transform(self.X)
         
         ''' Optimisation Objective Function '''
         # Optimisation of hyperparameters via the objective funciton
@@ -64,7 +67,7 @@ class Kriging(BaseEstimator,RegressorMixin):
             def llh_dir(hypers):
                 K = self.covfn(X,X,theta=hypers[0],sigma=hypers[1]) + noise**2 * np.eye(self.ntot)
                 return 0.5 * np.log(det(K)) + \
-                    0.5 * y.T.dot(inv(K).dot(y)).ravel()[0] + 0.5 * len(X) * np.log(2*pi)
+                    0.5 * y.T.dot(inv(K).dot(y)).ravel()[0] + 0.5 * self.ntot * np.log(2*pi)
 
             # Full Likelihood Equation
             def nll_full(hypers):
@@ -72,7 +75,7 @@ class Kriging(BaseEstimator,RegressorMixin):
                 L = cholesky(K)
                 return np.sum(np.log(np.diagonal(L))) + \
                     0.5 * y.T.dot(lstsq(L.T, lstsq(L,y)[0])[0]) + \
-                    0.5 * len(X) * np.log(2*pi)
+                    0.5 * self.ntot * np.log(2*pi)
             
             return llh_dir # return one of the two, simplified variant doesn't always work well
         
@@ -90,11 +93,11 @@ class Kriging(BaseEstimator,RegressorMixin):
                   + self.sigma_n**2 * np.eye(self.ntot) # Covariance Matrix (Train/Train)
         self.IKmat = pinv(self.Kmat) # Pseudo Matrix Inversion (More Stable)
 
-        self.HK = np.dot(self.HT,self.IKmat)
-        HKH = np.dot(self.HK,self.H)  # Regression matrix (Least Squares Matrix)
-        self.A = inv(HKH)        
+        self.HK = np.dot(self.HT,self.IKmat) # HK^-1
+        HKH = np.dot(self.HK,self.H)     # HK^-1HT
+        self.A = inv(HKH)             # Variance-Covariance Weighted LS Matrix
 
-        self.W = np.dot(self.IKmat,y)
+        self.W = np.dot(self.IKmat,self.y)
         Q = np.dot(self.HT,self.W)
         self.beta = np.dot(self.A,Q)               # Regression coefficients
         self.V = self.W - np.dot(self.IKmat,self.H).dot(self.beta) # K^{-1} (Y - H^{T} * beta)
@@ -112,11 +115,9 @@ class Kriging(BaseEstimator,RegressorMixin):
             self.Xm = Xm.values
         self.mtot,ndim = self.Xm.shape
         
-        self.Hm = poly.fit_transform(self.Xm)
-        self.Kmat = self.covfn(self.X,self.Xm,self.theta,self.sigma)
-        
-        mu_s = np.dot(self.Kmat.T,self.W)  # Posterior Mean Prediction w/o additional term 
+        self.Hm = self.poly.fit_transform(self.Xm) # Collocation Matrix
+        self.Kmat = self.covfn(self.X,self.Xm,self.theta,self.sigma) # Covariance Matrix (Train/Test)
         yreg = np.dot(self.Hm,self.beta)               # Mean Prediction based on Regression
         ykr = np.dot(self.Kmat.T,self.V)              # posterior mean predictions for an explicit mean 
-        
-        return yreg + ykr, mu_s
+
+        return yreg + ykr
