@@ -97,7 +97,8 @@ def feature_importance(tldf,feature='target',n_est=500,figsize=[800,400]):
     fig.update_layout(template='plotly_white',height=figsize[1],width=figsize[0],margin={"r":0,"t":60,"l":0,"b":0})
     for data in fig.data:
         data["width"] = 0.6 #Change this value for bar widths
-    fig.show()
+    # fig.show()
+    fig.write_html("/kaggle/working/feature_importance.html")
                 
 ''' Example Application '''
 from sklearn import datasets
