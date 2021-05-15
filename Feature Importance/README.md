@@ -1,5 +1,5 @@
 
-#### Combined Feature Importance Evaluation
+### Combined Feature Importance Evaluation
 
 - Due to the subjective nature of feature importance evaluations of various methods, the following simple code combines the most common approaches and gives them equal weighting and is normalised. Larger scores indicate more contribution in each individual evaluation. 
 - Example from Kaggle Notebook, [Perth Property Price Prediction](https://www.kaggle.com/shtrausslearning/perth-property-price-prediction)
