@@ -119,6 +119,7 @@ class transformer(BaseEstimator,TransformerMixin):
                 fig.update_layout(template='plotly_white',height=self.figsize[1],width=self.figsize[0],margin={"r":0,"t":60,"l":0,"b":0});
                 for data in fig.data:
                     data["width"] = 0.6 #Change this value for bar widths
+                fig.write_html("/kaggle/working/feature_importance.html") # output html format
                 fig.show()
                 
             feature_importance(X)
