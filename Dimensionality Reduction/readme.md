@@ -1,6 +1,10 @@
 ### Unsupervised Learning Dimensionality Reduction
-- Often we have too many features in the feature matrix, we can reduce the number of dimension in the problem by using unsupervised learning methods
-- In this function, most common methods available in the <code>sklearn</code> library are included & an example code is given.
+
+<sub>
+- Often we have too many features in the feature matrix, we can reduce the number of dimension in the problem by using unsupervised learning methods. <br>
+- In many problems application different approaches may work better than others, and some might not be very practical to implement due to computational cost. <br>
+- In this function, most common methods available in the <code>sklearn</code> library are included & an example code is given. <br>
+- An example implementation is viewable in a Kaggle Notebook, [Building An Asset Trading Strategy](https://www.kaggle.com/shtrausslearning/building-an-asset-trading-strategy)
 
 | <sub>TNSE (Manifold)</sub> | <sub>Multi Dim. Scaling (Manifold)</sub> | <sub>PCA (Decomposition)</sub> |  <sub>LLE (Manifold Learning)</sub> |
 | - | - | - | - |
