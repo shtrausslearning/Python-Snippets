@@ -9,6 +9,7 @@ from sklearn import preprocessing
 
 line_colors = ["#7CEA9C", '#50B2C0', "rgb(114, 78, 145)", "hsv(348, 66%, 90%)", "hsl(45, 93%, 58%)"]
 
+# MAIN CLASS
 class transformer(BaseEstimator,TransformerMixin):
     
     def __init__(self,drop_nan=False,select_dtype=False,show_nan=False,title='Title',show_counts=False,
