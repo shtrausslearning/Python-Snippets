@@ -8,7 +8,7 @@
 - The nature of Plotly's interative plots, allows us to compare any combination of methods & visualise the feature importance.
 </sub>
 
-<br>
+<br><br>
 
 
 |<sub>Example from Kaggle Notebook, [Perth Property Price Prediction](https://www.kaggle.com/shtrausslearning/perth-property-price-prediction)</sub>|
