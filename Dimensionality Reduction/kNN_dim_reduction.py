@@ -16,28 +16,25 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-# function to plot a two PCA Feature Plot using Pandas 
-def scatterPlot(xDF, yDF, algoName):
+# function to plot a first two primary dimensions
+def scatterPlot(xDF,yDF,algoName,figsize):
     
     sns.set_style('whitegrid')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(figsize[0],figsize[1]))
     tempDF = pd.DataFrame(data=xDF.loc[:,0:1], index=xDF.index)
     tempDF = pd.concat((tempDF,yDF), axis=1, join="inner")
     tempDF.columns = ["Component 1","Component 2","Label"]
     g = sns.scatterplot(x="Component 1",y="Component 2",data=tempDF,hue="Label",
-                        linewidth=0.5,alpha=0.5,s=15,edgecolor='k')
+                        linewidth=0.5,alpha=0.5,s=50,edgecolor='k',palette="Spectral")
     plt.title(algoName);plt.legend()
     
-    for i in ['top', 'right', 'bottom', 'left']:
-        ax.spines[i].set_color('black')
-    
-    ax.spines['top'].set_visible(False);ax.spines['right'].set_visible(False)
-    ax.spines['bottom'].set_visible(False);ax.spines['left'].set_visible(False)
+#     ax.spines['top'].set_visible(False);ax.spines['right'].set_visible(False)
+#     ax.spines['bottom'].set_visible(False);ax.spines['left'].set_visible(False)
     ax.grid(axis = 'both',ls='--',alpha = 0.9)
     plt.show()
 
 # DataFrame input Dimensionality Reduction Function
-def dimRed(ldf,feature='target',n_comp=5,plot_id=False,model_id='pca'):
+def dimRed(ldf,feature='target',n_comp=5,plot_id=False,figsize=(10,10),model_id='pca'):
     
     # Given a dataframe, split feature/target variable
     X = ldf.copy()
@@ -49,13 +46,13 @@ def dimRed(ldf,feature='target',n_comp=5,plot_id=False,model_id='pca'):
     if(model_id is 'pca'):
         whiten = False
         model = PCA(n_components=n_comp,whiten=whiten,random_state=rs)
-    if(model_id is 'sparsepca'):
+    if(model_id is 'spca'):
         alpha = 1
         model = SparsePCA(n_components=n_comp,alpha=alpha,random_state=rs,n_jobs=n_jobs)
-    elif(model_id is 'kernelpca'):
+    elif(model_id is 'kpca'):
         kernel = 'rbf'; gamma = None
         model = KernelPCA(n_components=n_comp,kernel=kernel,gamma=gamma,n_jobs=n_jobs,random_state=rs)
-    elif(model_id is 'incrementalpca'):
+    elif(model_id is 'ipca'):
         batch_size = None
         model = IncrementalPCA(n_components=n_comp,batch_size=batch_size)
     elif(model_id is 'truncatedsvd'): 
@@ -86,7 +83,7 @@ def dimRed(ldf,feature='target',n_comp=5,plot_id=False,model_id='pca'):
         model = TSNE(n_components=n_comp, learning_rate=learning_rate, \
                     perplexity=perplexity, early_exaggeration=early_exaggeration, \
                     init=init, random_state=rs)
-    elif(model_id is 'minibatchdictionarylearning'):
+    elif(model_id is 'mbdl'):
         alpha = 1; batch_size = 200; n_iter = 25
         model = MiniBatchDictionaryLearning(n_components=n_comp,alpha=alpha,
                                             batch_size=batch_size,n_iter=n_iter,random_state=rs)
@@ -99,12 +96,12 @@ def dimRed(ldf,feature='target',n_comp=5,plot_id=False,model_id='pca'):
     X_red = model.fit_transform(X)
     X_red = pd.DataFrame(data=X_red, index=X.index)
     if(plot_id):
-         scatterPlot(X_red, y,model_id)
+         scatterPlot(X_red, y,model_id,figsize)
     X_red[feature] = y
     
     return X_red # return new feature matrix
 
-''' Example Application '''
+''' EXAMPLE '''
 from sklearn import datasets
 
 def sklearn_to_df(sklearn_dataset):
@@ -112,11 +109,17 @@ def sklearn_to_df(sklearn_dataset):
     df['target'] = pd.Series(sklearn_dataset.target)
     return df
 
-#df_boston = sklearn_to_df(datasets.load_boston())
+df_boston = sklearn_to_df(datasets.load_boston())
 #display(df_boston.head())
-#df_cali = sklearn_to_df(datasets.fetch_california_housing())
+# df_cali = sklearn_to_df(datasets.fetch_california_housing())
 #display(df_cali.head())
-df_diab = sklearn_to_df(datasets.load_diabetes())
+# df_diab = sklearn_to_df(datasets.load_diabetes())
 # print(df_diab.isna().sum()) # check missing data in columns
 
-dimRed(ldf=df_diab,feature='target',n_comp=3,plot_id=True)
+df_boston_red = dimRed(ldf=df_boston,    # input df w/ target variable
+                       feature='target', # define target to be removed during transformation
+                       n_comp=5,         # output reduced feature matrix w/ n_comp components
+                       plot_id=True,    # show plot, first 2 dimensions
+                       figsize=(10,10), # plot_id figsize
+                       model_id='mds'   # reduction model
+                      )
