@@ -7,6 +7,7 @@
 - The following simple code combines the most common approaches and gives them equal weighting and is normalised. Larger scores indicate more contribution in each individual evaluation. <br>
 - The nature of Plotly's interative plots, allows us to compare any combination of methods & visualise the feature importance.
 </sub>
+<br>
 
 |<sub>Example from Kaggle Notebook, [Perth Property Price Prediction](https://www.kaggle.com/shtrausslearning/perth-property-price-prediction)</sub>|
 |-|
