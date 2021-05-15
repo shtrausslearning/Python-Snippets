@@ -8,6 +8,7 @@
 </sub>
 
 #### 2 | Examples of Dimensionality Reduction
+- sklearn has two main types of modules modules for this tas; <code>decomposition</b> & <code>manifold</code>.
 
 |TNSE (Manifold) | Multi Dim. Scaling (Manifold) | PCA (Decomposition) | LLE (Manifold Learning) |
 | - | - | - | - |
