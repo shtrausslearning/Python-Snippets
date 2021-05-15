@@ -8,9 +8,9 @@
 </sub>
 
 #### 2 | Examples of Dimensionality Reduction
-<sub>
+<sup>
 - sklearn has two main types of modules modules for this task; <code>decomposition</code> & <code>manifold</code>
-</sub>
+</sup>
   
 <br>
   
