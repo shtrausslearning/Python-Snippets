@@ -1,11 +1,11 @@
 #### 1 | Unsupervised Learning Dimensionality Reduction
 
+
 <sub>
-  
 - Often we have too many features in the feature matrix, we can reduce the number of dimension in the problem by using unsupervised learning methods. <br>
 - In many problems application different approaches may work better than others, and some might not be very practical to implement due to computational cost. <br>
 - In this function, most common methods available in the <code>sklearn</code> library are included & an example code is given. <br>
-- An example implementation is viewable in a Kaggle Notebook, 
+- An example implementation is viewable in a Kaggle Notebook, https://www.kaggle.com/shtrausslearning/building-an-asset-trading-strategy
 </sub>
 
 #### 2 | Examples of Dimensionality Reduction
