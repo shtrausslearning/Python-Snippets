@@ -1,7 +1,7 @@
 
 ### Combined Feature Importance Evaluation
 
-- We often are interested in the contribution features have in models, for example we might look at the correlation to the target variable, the full list of those used in the following function are visible in the figure below.
+- We often are interested in the contribution features have in models, for example we might look at the correlation to the target variable of features and remove highly correlated features. The full list of those used in the following function are visible in the figure below.
 - Due to the subjective nature of feature importance evaluations of various methods, the following simple code combines the most common approaches and gives them equal weighting and is normalised. Larger scores indicate more contribution in each individual evaluation. 
 - Example from Kaggle Notebook, [Perth Property Price Prediction](https://www.kaggle.com/shtrausslearning/perth-property-price-prediction)
 
